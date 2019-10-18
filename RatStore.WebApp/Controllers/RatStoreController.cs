@@ -12,13 +12,13 @@ namespace RatStore.WebApp.Controllers
     public class RatStoreController : Controller
     {
         IDataStore _dataStore;
-        Data.Customer _currentCustomer;
+        Logic.Customer _currentCustomer;
         
         public bool LoggedIn { get; set; }
 
-        public RatStoreController()
+        public RatStoreController(IDataStore dataStore)
         {
-            _dataStore = RatStoreConfiguration.GetDataStore();
+            _dataStore = dataStore;
         }
 
         // GET: RatStore
@@ -47,7 +47,6 @@ namespace RatStore.WebApp.Controllers
             try
             {
                 // TODO: Add insert logic here
-
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -56,20 +55,60 @@ namespace RatStore.WebApp.Controllers
             }
         }
 
-        // GET: RatStore/Create
+        // GET: RatStore/CreateCustomer
+        public ActionResult CreateCustomer()
+        {
+            return View();
+        }
+
+        // POST: RatStore/CreateCustomer
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateCustomer(IFormCollection collection)
+        {
+            try
+            {
+                Customer newCustomer = new Customer
+                {
+                    Username = collection["Username"].ToString(),
+                    Password = collection["Password"].ToString(),
+                    FirstName = collection["FirstName"].ToString(),
+                    MiddleName = collection["MiddleName"].ToString(),
+                    LastName = collection["LastName"].ToString(),
+                    PhoneNumber = collection["PhoneNumber"].ToString()
+                };
+
+                // Validate customer, throw exception for bad entries
+
+                _dataStore.AddCustomer(newCustomer);
+                _dataStore.Save();
+
+                return RedirectToAction(nameof(LogIn));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: RatStore/LogIn
         public ActionResult LogIn()
         {
             return View();
         }
 
-        // POST: RatStore/Create
+        // POST: RatStore/LogIn
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogIn(IFormCollection collection)
         {
             try
             {
-                // TODO: Add insert logic here
+                _currentCustomer = _dataStore.GetCustomerByUsernameAndPassword(collection["Username"], collection["Password"]);
+
+                // TODO: Handle non-existent/incorrect credentials w/ error message
+                if (_currentCustomer == null)
+                    throw new NullReferenceException("Customer not found.");
 
                 return RedirectToAction(nameof(Index));
             }

@@ -4,8 +4,9 @@ using System.IO;
 using System.Text;
 using Newtonsoft.Json;
 using System.Linq;
+using System.Data;
 
-namespace RatStore.Data
+namespace RatStore.Logic
 {
     public class TextStore : IDataStore
     {
@@ -183,10 +184,12 @@ namespace RatStore.Data
         {
             Customers.Add(customer);
         }
-        public void AddCustomer(string firstName, string middleName, string lastName, string phoneNumber)
+        public void AddCustomer(string username, string password, string firstName, string middleName, string lastName, string phoneNumber)
         {
             Customer customer = new Customer()
             {
+                Username = username,
+                Password = password,
                 FirstName = firstName,
                 MiddleName = middleName,
                 LastName = lastName,
@@ -216,6 +219,15 @@ namespace RatStore.Data
             }
 
             throw new Exception($"No customer with given id: {id}");
+        }
+        public Customer GetCustomerByUsernameAndPassword(string username, string password)
+        {
+            Customer customer = Customers.Find(c => c.Username == username && c.Password == password);
+
+            if (customer == null)
+                throw new Exception($"No customer with given username and password.");
+
+            return customer;
         }
         public List<Customer> GetAllCustomers()
         {

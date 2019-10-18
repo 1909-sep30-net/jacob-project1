@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RatStore.Data
+namespace RatStore.Logic
 {
     public interface IDataStore
     {
@@ -39,7 +39,7 @@ namespace RatStore.Data
         /// <param name="middleName"></param>
         /// <param name="lastName"></param>
         /// <param name="phoneNumber"></param>
-        void AddCustomer(string firstName, string middleName, string lastName, string phoneNumber);
+        void AddCustomer(string username, string password, string firstName, string middleName, string lastName, string phoneNumber);
         /// <summary>
         /// Get a Customer from the data store by name and phone.
         /// </summary>
@@ -54,6 +54,13 @@ namespace RatStore.Data
         /// <param name="id"></param>
         /// <returns></returns>
         Customer GetCustomerById(int id);
+        /// <summary>
+        /// Gets the Customer by their username and password.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        Customer GetCustomerByUsernameAndPassword(string username, string password);
         /// <summary>
         /// Gets a list in memory of all customers in the data store.
         /// </summary>

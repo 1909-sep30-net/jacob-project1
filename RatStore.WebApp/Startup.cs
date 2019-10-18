@@ -9,7 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RatStore.Data;
+using RatStore.Logic;
+
+/* Scaffold command:
+dotnet ef dbcontext scaffold Name=RatStoreDB Microsoft.EntityFrameworkCore.SqlServer --startup-project ../RatStore.WebApp --force --output-dir Entities
+*/
 
 namespace RatStore.WebApp
 {

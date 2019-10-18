@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RatStore.Data
+namespace RatStore.Logic
 {
-    public class OrderDetails
+    public class ProductComponent
     {
-        public Product Product { get; set; }
+        public Component Component { get; set; }
         public int Quantity { get; set; }
     }
 }

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using RatStore.Data;
 
-namespace RatStore.Data
+namespace RatStore.Logic
 {
     public static class Mapper
     {
@@ -13,9 +14,9 @@ namespace RatStore.Data
         /// </summary>
         /// <param name="component"></param>
         /// <returns></returns>
-        public static Data.Component MapComponent(Entities.Component component)
+        public static Component MapComponent(Data.Entities.Component component)
         {
-            return new Data.Component
+            return new Component
             {
                 ComponentId = component.ComponentId,
                 Name = component.Name,
@@ -27,9 +28,9 @@ namespace RatStore.Data
         /// </summary>
         /// <param name="component"></param>
         /// <returns></returns>
-        public static Entities.Component MapComponent(Data.Component component)
+        public static Data.Entities.Component MapComponent(Component component)
         {
-            return new Entities.Component
+            return new Data.Entities.Component
             {
                 ComponentId = component.ComponentId,
                 Name = component.Name,
@@ -44,9 +45,9 @@ namespace RatStore.Data
         /// </summary>
         /// <param name="productComponent"></param>
         /// <returns></returns>
-        public static Data.ProductComponent MapProductComponent(Entities.ProductComponent productComponent)
+        public static ProductComponent MapProductComponent(Data.Entities.ProductComponent productComponent)
         {
-            return new Data.ProductComponent
+            return new ProductComponent
             {
                 Component = MapComponent(productComponent.Component),
                 Quantity = productComponent.Quantity ?? throw new ArgumentException("Argument cannot be null", nameof(productComponent))
@@ -57,9 +58,9 @@ namespace RatStore.Data
         /// </summary>
         /// <param name="productComponent"></param>
         /// <returns></returns>
-        public static Entities.ProductComponent MapProductComponent(Data.ProductComponent productComponent)
+        public static Data.Entities.ProductComponent MapProductComponent(ProductComponent productComponent)
         {
-            return new Entities.ProductComponent
+            return new Data.Entities.ProductComponent
             {
                 ComponentId = productComponent.Component.ComponentId,
                 Quantity = productComponent.Quantity 
@@ -73,9 +74,9 @@ namespace RatStore.Data
         /// </summary>
         /// <param name="product"></param>
         /// <returns></returns>
-        public static Data.Product MapProduct(Entities.Product product)
+        public static Product MapProduct(Data.Entities.Product product)
         {
-            return new Data.Product
+            return new Product
             {
                 ProductId = product.ProductId,
                 Name = product.Name,
@@ -87,9 +88,9 @@ namespace RatStore.Data
         /// </summary>
         /// <param name="product"></param>
         /// <returns></returns>
-        public static Entities.Product MapProduct(Data.Product product)
+        public static Data.Entities.Product MapProduct(Product product)
         {
-            return new Entities.Product
+            return new Data.Entities.Product
             {
                 ProductId = product.ProductId,
                 Name = product.Name,
@@ -104,11 +105,13 @@ namespace RatStore.Data
         /// </summary>
         /// <param name="customer"></param>
         /// <returns></returns>
-        public static Data.Customer MapCustomer(Entities.Customer customer)
+        public static Customer MapCustomer(Data.Entities.Customer customer)
         {
             return new Customer
             {
                 CustomerId = customer.CustomerId,
+                Username = customer.Username,
+                Password = customer.Password,
                 FirstName = customer.FirstName,
                 MiddleName = customer.MiddleName,
                 LastName = customer.LastName,
@@ -120,11 +123,13 @@ namespace RatStore.Data
         /// </summary>
         /// <param name="customer"></param>
         /// <returns></returns>
-        public static Entities.Customer MapCustomer(Data.Customer customer)
+        public static Data.Entities.Customer MapCustomer(Customer customer)
         {
-            return new Entities.Customer
+            return new Data.Entities.Customer
             {
                 CustomerId = customer.CustomerId,
+                Username = customer.Username,
+                Password = customer.Password,
                 FirstName = customer.FirstName,
                 MiddleName = customer.MiddleName,
                 LastName = customer.LastName,
@@ -139,9 +144,9 @@ namespace RatStore.Data
         /// </summary>
         /// <param name="inventoryItem"></param>
         /// <returns></returns>
-        public static Data.Inventory MapInventory(Entities.Inventory inventoryItem)
+        public static Inventory MapInventory(Data.Entities.Inventory inventoryItem)
         {
-            return new Data.Inventory
+            return new Inventory
             {
                 Component = MapComponent(inventoryItem.Component),
                 Quantity = inventoryItem.Quantity ?? throw new ArgumentException("Argument cannot be null", nameof(inventoryItem))
@@ -152,9 +157,9 @@ namespace RatStore.Data
         /// </summary>
         /// <param name="inventoryItem"></param>
         /// <returns></returns>
-        public static Entities.Inventory MapInventory(Data.Inventory inventoryItem)
+        public static Data.Entities.Inventory MapInventory(Inventory inventoryItem)
         {
-            return new Entities.Inventory
+            return new Data.Entities.Inventory
             {
                 ComponentId = inventoryItem.Component.ComponentId,
                 Quantity = inventoryItem.Quantity
@@ -168,9 +173,9 @@ namespace RatStore.Data
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public static Data.Location MapLocation(Entities.Location location)
+        public static Location MapLocation(Data.Entities.Location location)
         {
-            return new Data.Location
+            return new Location
             {
                 LocationId = location.LocationId,
                 Address = location.Address,
@@ -182,9 +187,9 @@ namespace RatStore.Data
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public static Entities.Location MapLocation(Data.Location location)
+        public static Data.Entities.Location MapLocation(Location location)
         {
-            return new Entities.Location
+            return new Data.Entities.Location
             {
                 LocationId = location.LocationId,
                 Address = location.Address,
@@ -199,9 +204,9 @@ namespace RatStore.Data
         /// </summary>
         /// <param name="orderDetails"></param>
         /// <returns></returns>
-        public static Data.OrderDetails MapOrderDetails(Entities.OrderDetails orderDetails)
+        public static OrderDetails MapOrderDetails(Data.Entities.OrderDetails orderDetails)
         {
-            return new Data.OrderDetails
+            return new OrderDetails
             {
                 Product = MapProduct(orderDetails.Product),
                 Quantity = orderDetails.Quantity ?? throw new ArgumentException("Argument cannot be null", nameof(orderDetails))
@@ -212,9 +217,9 @@ namespace RatStore.Data
         /// </summary>
         /// <param name="orderDetails"></param>
         /// <returns></returns>
-        public static Entities.OrderDetails MapOrderDetails(Data.OrderDetails orderDetails)
+        public static Data.Entities.OrderDetails MapOrderDetails(OrderDetails orderDetails)
         {
-            return new Entities.OrderDetails
+            return new Data.Entities.OrderDetails
             {
                 ProductId = orderDetails.Product.ProductId,
                 Quantity = orderDetails.Quantity
@@ -228,9 +233,9 @@ namespace RatStore.Data
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public static Data.Order MapOrder(Entities.Order order)
+        public static Order MapOrder(Data.Entities.Order order)
         {
-            return new Data.Order
+            return new Order
             {
                 OrderId = order.OrderId,
                 CustomerId = order.CustomerId ?? throw new ArgumentException("Argument cannot be null", nameof(order)),
@@ -244,9 +249,9 @@ namespace RatStore.Data
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public static Entities.Order MapOrder(Data.Order order)
+        public static Data.Entities.Order MapOrder(Order order)
         {
-            return new Entities.Order
+            return new Data.Entities.Order
             {
                 OrderId = order.OrderId,
                 CustomerId = order.CustomerId,

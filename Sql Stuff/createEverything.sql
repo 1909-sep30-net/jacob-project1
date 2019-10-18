@@ -23,6 +23,8 @@ GO
 
 CREATE TABLE [Customer] (
   [customerId] int PRIMARY KEY IDENTITY(1, 1),
+  [username] nvarchar(255) UNIQUE,
+  [password] nvarchar(255),
   [firstName] nvarchar(255),
   [middleName] nvarchar(255),
   [lastName] nvarchar(255),

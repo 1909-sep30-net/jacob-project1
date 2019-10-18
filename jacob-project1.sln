@@ -14,7 +14,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RatStore.Data", "RatStore.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RatStore.Test", "RatStore.Test\RatStore.Test.csproj", "{6BC053C1-CDF2-4650-AF7C-DDD5F1DD11A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RatStore.WebApp", "RatStore.WebApp\RatStore.WebApp.csproj", "{7B87CEC7-2953-439C-9427-9BA0D3B4A5E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RatStore.WebApp", "RatStore.WebApp\RatStore.WebApp.csproj", "{7B87CEC7-2953-439C-9427-9BA0D3B4A5E3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sql Stuff", "Sql Stuff", "{65472262-49B0-47E0-8072-810B8FA14469}"
+	ProjectSection(SolutionItems) = preProject
+		Sql Stuff\createEverything.sql = Sql Stuff\createEverything.sql
+		Sql Stuff\dropEverything.sql = Sql Stuff\dropEverything.sql
+		Sql Stuff\insertDummyInfo.sql = Sql Stuff\insertDummyInfo.sql
+		Sql Stuff\revature_project0.pdf = Sql Stuff\revature_project0.pdf
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

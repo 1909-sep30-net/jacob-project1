@@ -4,28 +4,27 @@ using System.Text;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using RatStore.Data;
-using RatStore.Data.Entities;
 using Serilog;
 using Serilog.Sinks.SystemConsole;
 
-namespace RatStore.Data
+namespace RatStore.Logic
 {
     public class DatabaseStore : IDataStore
     {
         #region Properties
-        private DbContextOptions<jacobproject0Context> _options;
-        private jacobproject0Context _context;
+        private DbContextOptions<Data.Entities.jacobproject0Context> _options;
+        private Data.Entities.jacobproject0Context _context;
         #endregion
 
         #region Startup and Shutdown
         public DatabaseStore()
         {
-            _options = new DbContextOptionsBuilder<jacobproject0Context>()
-                .UseSqlServer(SecretCode.Sauce)
+            _options = new DbContextOptionsBuilder<Data.Entities.jacobproject0Context>()
+                .UseSqlServer(Data.Entities.SecretCode.Sauce)
                 .EnableSensitiveDataLogging()
                 .Options;
 
-            _context = new jacobproject0Context(_options);
+            _context = new Data.Entities.jacobproject0Context(_options);
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
@@ -69,13 +68,15 @@ namespace RatStore.Data
         #region Customer
         public void AddCustomer(Customer customer)
         {
-            Entities.Customer newCustomer = Mapper.MapCustomer(customer);
+            Data.Entities.Customer newCustomer = Mapper.MapCustomer(customer);
             _context.Customer.Add(newCustomer);
         }
-        public void AddCustomer(string firstName, string middleName, string lastName, string phoneNumber)
+        public void AddCustomer(string username, string password, string firstName, string middleName, string lastName, string phoneNumber)
         {
             Customer customer = new Customer
             {
+                Username = username,
+                Password = password,
                 FirstName = firstName,
                 MiddleName = middleName,
                 LastName = lastName,
@@ -88,20 +89,22 @@ namespace RatStore.Data
             => _context.Customer.Select(Mapper.MapCustomer).Where(c => c.FirstName == firstName && c.LastName == lastName && c.PhoneNumber == phoneNumber).FirstOrDefault();
         public Customer GetCustomerById(int id)
             => Mapper.MapCustomer(_context.Customer.Find(id));
+        public Customer GetCustomerByUsernameAndPassword(string username, string password)
+            => Mapper.MapCustomer(_context.Customer.Where(c => c.Username == username && c.Password == password).FirstOrDefault()); 
         public List<Customer> GetAllCustomers()
         {
-            IQueryable<Entities.Customer> customers = _context.Customer
+            IQueryable<Data.Entities.Customer> customers = _context.Customer
                 .AsNoTracking();
 
             return customers.Select(Mapper.MapCustomer).ToList();
         }
         public void UpdateCustomer(Customer customer)
         {
-            Entities.Customer currentCustomer = _context.Customer.Find(customer.CustomerId);
+            Data.Entities.Customer currentCustomer = _context.Customer.Find(customer.CustomerId);
 
             if (currentCustomer != null)
             {
-                Entities.Customer newCustomer = Mapper.MapCustomer(customer);
+                Data.Entities.Customer newCustomer = Mapper.MapCustomer(customer);
 
                 _context.Entry(currentCustomer).CurrentValues.SetValues(newCustomer);
 
@@ -114,7 +117,7 @@ namespace RatStore.Data
         }
         public void RemoveCustomer(int id)
         {
-            Entities.Customer customer = _context.Customer.Find(id);
+            Data.Entities.Customer customer = _context.Customer.Find(id);
 
             if (customer != null)
             {
@@ -132,7 +135,7 @@ namespace RatStore.Data
         #region Location
         public void AddLocation(Location location)
         {
-            Entities.Location newLocation = Mapper.MapLocation(location);
+            Data.Entities.Location newLocation = Mapper.MapLocation(location);
             _context.Location.Add(newLocation);
         }
         public Location GetLocationById(int id)
@@ -143,7 +146,7 @@ namespace RatStore.Data
                 .First(l => l.LocationId == id));
         public List<Location> GetAllLocations()
         {
-            IQueryable<Entities.Location> locations = _context.Location
+            IQueryable<Data.Entities.Location> locations = _context.Location
                 .Include(l => l.Inventory)
                 .ThenInclude(i => i.Component)
                 .Include(l => l.Order)
@@ -153,12 +156,12 @@ namespace RatStore.Data
         }
         public void UpdateLocation(Location location)
         {
-            Entities.Location currentLocation = _context.Location
+            Data.Entities.Location currentLocation = _context.Location
                 .Include(l => l.Inventory).FirstOrDefault(l => l.LocationId == location.LocationId);
 
             if (currentLocation != null)
             {
-                foreach (Entities.Inventory item in currentLocation.Inventory)
+                foreach (Data.Entities.Inventory item in currentLocation.Inventory)
                 {
                     item.Quantity = location.Inventory.Find(i => i.Component.ComponentId == item.ComponentId).Quantity;
                 }
@@ -172,7 +175,7 @@ namespace RatStore.Data
         }
         public void RemoveLocation(int id)
         {
-            Entities.Location location = _context.Location.Find(id);
+            Data.Entities.Location location = _context.Location.Find(id);
 
             if (location != null)
             {
@@ -190,7 +193,7 @@ namespace RatStore.Data
         #region Product
         public void AddProduct(Product product)
         {
-            Entities.Product newProduct = Mapper.MapProduct(product);
+            Data.Entities.Product newProduct = Mapper.MapProduct(product);
             _context.Product.Add(newProduct);
         }
         public Product GetProductByName(string name)
@@ -200,7 +203,7 @@ namespace RatStore.Data
                 .First(p => p.Name == name));
         public List<Product> GetAllProducts()
         {
-            IQueryable<Entities.Product> products = _context.Product
+            IQueryable<Data.Entities.Product> products = _context.Product
                 .Include(p => p.ProductComponent)
                 .ThenInclude(pc => pc.Component)
                 .AsNoTracking();
@@ -209,11 +212,11 @@ namespace RatStore.Data
         }
         public void UpdateProduct(Product product)
         {
-            Entities.Product currentProduct = _context.Product.Find(product.ProductId);
+            Data.Entities.Product currentProduct = _context.Product.Find(product.ProductId);
 
             if (currentProduct != null)
             {
-                Entities.Product newProduct = Mapper.MapProduct(product);
+                Data.Entities.Product newProduct = Mapper.MapProduct(product);
 
                 _context.Entry(currentProduct).CurrentValues.SetValues(newProduct);
 
@@ -226,7 +229,7 @@ namespace RatStore.Data
         }
         public void RemoveProduct(int id)
         {
-            Entities.Product product = _context.Product.Find(id);
+            Data.Entities.Product product = _context.Product.Find(id);
 
             if (product != null)
             {
@@ -244,7 +247,7 @@ namespace RatStore.Data
         #region Component
         public void AddComponent(Component component)
         {
-            Entities.Component newComponent = Mapper.MapComponent(component);
+            Data.Entities.Component newComponent = Mapper.MapComponent(component);
             _context.Component.Add(newComponent);
         }
         public Component GetComponentByName(string name)
@@ -253,18 +256,18 @@ namespace RatStore.Data
             => Mapper.MapComponent(_context.Component.AsNoTracking().FirstOrDefault(c => c.ComponentId == id));
         public List<Component> GetAllComponents()
         {
-            IQueryable<Entities.Component> component = _context.Component
+            IQueryable<Data.Entities.Component> component = _context.Component
                 .AsNoTracking();
 
             return component.Select(Mapper.MapComponent).ToList();
         }
         public void UpdateComponent(Component component)
         {
-            Entities.Component currentComponent = _context.Component.AsNoTracking().FirstOrDefault(c => c.ComponentId == component.ComponentId);
+            Data.Entities.Component currentComponent = _context.Component.AsNoTracking().FirstOrDefault(c => c.ComponentId == component.ComponentId);
 
             if (currentComponent != null)
             {
-                Entities.Component newComponent = Mapper.MapComponent(component);
+                Data.Entities.Component newComponent = Mapper.MapComponent(component);
 
                 _context.Entry(currentComponent).CurrentValues.SetValues(newComponent);
 
@@ -277,7 +280,7 @@ namespace RatStore.Data
         }
         public void RemoveComponent(int id)
         {
-            Entities.Component component = _context.Component.FirstOrDefault(c => c.ComponentId == id);
+            Data.Entities.Component component = _context.Component.FirstOrDefault(c => c.ComponentId == id);
 
             if (component != null)
             {
@@ -306,7 +309,7 @@ namespace RatStore.Data
                 .First(o => o.OrderId == id));
         public List<Order> GetOrderHistory(int customerId = 0)
         {
-            IQueryable<Entities.Order> orders = _context.Order
+            IQueryable<Data.Entities.Order> orders = _context.Order
                     .AsNoTracking();
 
             try
@@ -350,11 +353,11 @@ namespace RatStore.Data
 
         public void UpdateOrder(Order order)
         {
-            Entities.Order currentOrder = _context.Order.Find(order.OrderId);
+            Data.Entities.Order currentOrder = _context.Order.Find(order.OrderId);
 
             if (order != null)
             {
-                Entities.Order newOrder = Mapper.MapOrder(order);
+                Data.Entities.Order newOrder = Mapper.MapOrder(order);
 
                 _context.Entry(currentOrder).CurrentValues.SetValues(newOrder);
 
@@ -367,7 +370,7 @@ namespace RatStore.Data
         }
         public void RemoveOrder(int id)
         {
-            Entities.Order customer = _context.Order.Find(id);
+            Data.Entities.Order customer = _context.Order.Find(id);
 
             if (customer != null)
             {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RatStore.Data
+namespace RatStore.Logic
 {
     public struct Component
     {

@@ -10,7 +10,7 @@ namespace RatStore.UI
         {
             Navigator nav = new Navigator();
             nav.CurrentStore = new Logic.RatStore(Logic.RatStoreConfiguration.GetDataStore());
-
+            
             bool loggedIn = false;
 
             while (true)
@@ -136,7 +136,7 @@ namespace RatStore.UI
                     if (c != 'y')
                         continue;
  
-                    nav.CurrentStore.DataStore.AddCustomer(firstName, middleName, lastName, phoneNumber);
+                    nav.CurrentStore.DataStore.AddCustomer(firstName, phoneNumber, firstName, middleName, lastName, phoneNumber);
                     nav.CurrentStore.DataStore.Save();
 
                     nav.CurrentCustomer = nav.CurrentStore.DataStore.GetCustomerByNameAndPhone(firstName, lastName, phoneNumber);
