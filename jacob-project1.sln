@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29326.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RatStore.Logic", "RatStore.Logic\RatStore.Logic.csproj", "{BC10E788-3978-4EDB-B102-15C936A53415}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RatStore.UI", "RatStore.UI\RatStore.UI.csproj", "{163457B1-0537-4709-81EC-D4124E4E5640}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7240AEA3-BEB6-4DB2-B998-10E65E6E9206} = {7240AEA3-BEB6-4DB2-B998-10E65E6E9206}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RatStore.Data", "RatStore.Data\RatStore.Data.csproj", "{7240AEA3-BEB6-4DB2-B998-10E65E6E9206}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RatStore.Test", "RatStore.Test\RatStore.Test.csproj", "{6BC053C1-CDF2-4650-AF7C-DDD5F1DD11A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RatStore.WebApp", "RatStore.WebApp\RatStore.WebApp.csproj", "{7B87CEC7-2953-439C-9427-9BA0D3B4A5E3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BC10E788-3978-4EDB-B102-15C936A53415}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC10E788-3978-4EDB-B102-15C936A53415}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC10E788-3978-4EDB-B102-15C936A53415}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC10E788-3978-4EDB-B102-15C936A53415}.Release|Any CPU.Build.0 = Release|Any CPU
+		{163457B1-0537-4709-81EC-D4124E4E5640}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{163457B1-0537-4709-81EC-D4124E4E5640}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{163457B1-0537-4709-81EC-D4124E4E5640}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{163457B1-0537-4709-81EC-D4124E4E5640}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7240AEA3-BEB6-4DB2-B998-10E65E6E9206}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7240AEA3-BEB6-4DB2-B998-10E65E6E9206}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7240AEA3-BEB6-4DB2-B998-10E65E6E9206}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7240AEA3-BEB6-4DB2-B998-10E65E6E9206}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BC053C1-CDF2-4650-AF7C-DDD5F1DD11A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BC053C1-CDF2-4650-AF7C-DDD5F1DD11A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BC053C1-CDF2-4650-AF7C-DDD5F1DD11A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BC053C1-CDF2-4650-AF7C-DDD5F1DD11A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B87CEC7-2953-439C-9427-9BA0D3B4A5E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B87CEC7-2953-439C-9427-9BA0D3B4A5E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B87CEC7-2953-439C-9427-9BA0D3B4A5E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B87CEC7-2953-439C-9427-9BA0D3B4A5E3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1BEE9045-C573-45B8-A577-09B6DE998B3E}
+	EndGlobalSection
+EndGlobal
