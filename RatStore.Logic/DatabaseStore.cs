@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using RatStore.Data;
 using RatStore.Data.Entities;
 using Serilog;
 using Serilog.Sinks.SystemConsole;

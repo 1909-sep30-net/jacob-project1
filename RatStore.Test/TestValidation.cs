@@ -8,7 +8,7 @@ namespace RatStore.Test
 {
     public class TestValidation
     {
-        RatStore.Logic.RatStore test = new RatStore.Logic.RatStore();
+        RatStore.Logic.RatStore test = new RatStore.Logic.RatStore(new DatabaseStore());
 
         [Fact]
         public void InvalidLocation()

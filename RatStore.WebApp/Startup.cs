@@ -59,7 +59,7 @@ namespace RatStore.WebApp
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=RatStore}/{action=Index}/{id?}");
             });
         }
     }
