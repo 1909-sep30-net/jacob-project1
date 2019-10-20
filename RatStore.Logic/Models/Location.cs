@@ -42,15 +42,49 @@ namespace RatStore.Logic
 
         #region Inventory Management
         /// <summary>
-        /// Aquires a list of products the store can provide at least one of based on its stock of components.
+        /// Constructs a dictionary of Products that the store can theoretically provide and the maximum quantity.
         /// </summary>
-        /// <returns></returns>
-        virtual public List<Product> GetAvailableProducts()
+        /// <returns>List of Products</returns>
+        public Dictionary<Product, int> GetAvailableProducts()
         {
-            throw new Exception("No data for Location class!");
+            Dictionary<Product, int> availableProducts = new Dictionary<Product, int>();
+            List<Product> allProducts = DataStore.GetAllProducts();
+
+            foreach (Product p in allProducts)
+            {
+                availableProducts.Add(p, FindMaximumQty(p));
+            }
+
+            return availableProducts;
         }
         /// <summary>
-        /// Checks whether the store's inventory can provide a certain product at a given quantitiy, stored in an OrderDetail.
+        /// Uses binary search to find the highest quantity the current inventory can fulfill.
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
+        int FindMaximumQty(Product product)
+        {
+            int low = 1, high = 100;
+            int qty;
+
+            do
+            {
+                qty = (high - low) / 2;
+
+                if (CanFulfillProductQty(new OrderDetails { Product = product, Quantity = qty }))
+                {
+                    low = qty;
+                }
+                else
+                {
+                    high = qty;
+                }
+            } while (high - low > 0);
+
+            return qty;
+        }
+        /// <summary>
+        /// Checks whether the store's inventory can provide a single product at a given quantitiy, stored in an OrderDetail.
         /// </summary>
         /// <param name="orderDetails"></param>
         /// <returns></returns>
@@ -66,15 +100,31 @@ namespace RatStore.Logic
             return true;
         }
         /// <summary>
-        /// Checks that a store can fulfill an entire order.
+        /// Checks that a store can fulfill an entire order as a whole.
         /// </summary>
         /// <param name="order"></param>
         /// <returns>True ifthe store has required ingredients, false otherwise.</returns>
-        public bool CanFulfillOrder(Order order)
+        public bool CanFulfillOrder(List<OrderDetails> orderDetails)
         {
-            foreach (OrderDetails orderDetails in order.OrderDetails)
+            Dictionary<Component, int> inventoryOrder = new Dictionary<Component, int>();
+            foreach (OrderDetails od in orderDetails)
             {
-                if (!CanFulfillProductQty(orderDetails))
+                foreach (ProductComponent c in od.Product.Ingredients)
+                {
+                    if (inventoryOrder.ContainsKey(c.Component))
+                    {
+                        inventoryOrder[c.Component] += c.Quantity;
+                    }
+                    else
+                    {
+                        inventoryOrder.Add(c.Component, c.Quantity);
+                    }
+                }
+            }
+
+            foreach (Inventory i in Inventory)
+            {
+                if (!inventoryOrder.ContainsKey(i.Component) || i.Quantity < inventoryOrder[i.Component])
                     return false;
             }
 
@@ -124,20 +174,64 @@ namespace RatStore.Logic
         #endregion
 
         #region Validation
-        virtual public bool ValidateLocation(Location location)
+        /// <summary>
+        /// Checks for invalid Id and invalid Address.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns>True if valid, false otherwise.</returns>
+        public bool ValidateLocation(Location location)
         {
+            if (location.LocationId == 0
+                || location.Address == "")
+                return false;
+
             return true;
         }
-        virtual public bool ValidateCustomer(Customer customer)
+        /// <summary>
+        /// Checks that the Customer has a first name, last name, and phone number.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns>True if valid, false otherwise.</returns>
+        public bool ValidateCustomer(Customer customer)
         {
+            if (customer.FirstName == ""
+                || customer.LastName == ""
+                || customer.PhoneNumber == "")
+                return false;
+
             return true;
         }
-        virtual public bool ValidateProductRequest(List<OrderDetails> products)
+        /// <summary>
+        /// Checks that the list of OrderDetails has a valid product quantity (1 <= q <= 100).
+        /// </summary>
+        /// <param name="orderDetails"></param>
+        /// <returns>True if valid, false otherwise.</returns>
+        public bool ValidateProductRequest(List<OrderDetails> orderDetails)
         {
+            if (orderDetails.Count == 0)
+                return false;
+
+            foreach (OrderDetails detail in orderDetails)
+            {
+                if (detail.Quantity > 100
+                    || detail.Quantity < 1)
+                    return false;
+            }
+
             return true;
         }
-        virtual public bool ValidateOrder(Order order)
+        /// <summary>
+        /// Checks that the Order has at least one OrderDetail.
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns>True if valid, false otherwise.</returns>
+        public bool ValidateOrder(Order order)
         {
+            if (order == null
+                || order.OrderDetails == null
+                || order.OrderDetails.Count == 0)
+                return false;
+
             return true;
         }
         #endregion

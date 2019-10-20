@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using RatStore.Data;
+using RatStore.Logic;
 
-namespace RatStore.Logic
+namespace RatStore.UI
 {
     public class RatStoreConfiguration
     {

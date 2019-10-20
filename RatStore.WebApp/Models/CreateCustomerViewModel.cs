@@ -7,8 +7,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RatStore.WebApp.Models
 {
-    public class CreateCustomerViewModel
+    public class CreateCustomerViewModel : BaseViewModel
     {
+        public CreateCustomerViewModel(BaseViewModel _base) : base(_base)
+        {
+
+        }
+
         [Required(ErrorMessage = "This field is required.")]
         [StringLength(24, MinimumLength = 6, ErrorMessage = "Username must be between 6 and 24 characters.")]
         public string Username { get; set; }

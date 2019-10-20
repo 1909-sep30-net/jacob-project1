@@ -7,8 +7,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RatStore.WebApp.Models
 {
-    public class LogInViewModel
+    public class LogInViewModel : BaseViewModel
     {
+        public LogInViewModel(BaseViewModel _base) : base(_base)
+        {
+
+        }
+
         [Required(ErrorMessage = "This field is required.")]
         public string Username { get; set; }
 

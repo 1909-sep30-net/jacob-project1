@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using RatStore.Data;
-using System.Linq;
 
 namespace RatStore.Logic
 {
-    public class Navigator
+    public class Cart
     {
         List<OrderDetails> _cart;
-        public RatStore CurrentStore { get; set; }
 
-        public Customer CurrentCustomer { get; set; }
-
-        public Navigator()
+        public Cart()
         {
             _cart = new List<OrderDetails>();
         }
@@ -33,34 +28,21 @@ namespace RatStore.Logic
         }
 
         /// <summary>
-        /// Changes the CurrentStore to the Location with the given Id.
-        /// </summary>
-        /// <param name="targetStoreId"></param>
-        public void GoToStore(int targetStoreId)
-        {
-            CurrentStore.ChangeLocation(targetStoreId);
-        }
-
-        /// <summary>
         /// Verifies that the CurrentStore can fulfill the product request and then adds it to the Cart.
         /// </summary>
         /// <param name="productId"></param>
         /// <param name="quantity"></param>
-        public void AddProductToCart(int productId, int quantity)
+        public void AddProductToCart(Customer customer, Location location, Product product, int quantity)
         {
-            List<Product> availableProducts = CurrentStore.GetAvailableProducts();
-            if (productId > availableProducts.Count || productId < 0)
-                throw new Exception("Invalid product id");
-
-            Product product = availableProducts[productId];
+            Dictionary<Product, int> availableProducts = location.GetAvailableProducts();
             OrderDetails cartItem;
 
             if (!_cart.Exists(item => item.Product.ProductId == product.ProductId))
             {
-                cartItem = new OrderDetails 
-                { 
-                    Product = product, 
-                    Quantity = quantity 
+                cartItem = new OrderDetails
+                {
+                    Product = product,
+                    Quantity = quantity
                 };
 
                 _cart.Add(cartItem);
@@ -71,7 +53,7 @@ namespace RatStore.Logic
                 cartItem.Quantity += quantity;
             }
 
-            if (!CurrentStore.CanFulfillProductQty(cartItem))
+            if (!location.CanFulfillOrder(_cart))
             {
                 cartItem.Quantity -= quantity;
                 if (cartItem.Quantity == 0)
@@ -92,9 +74,9 @@ namespace RatStore.Logic
         /// <summary>
         /// Passes the Cart - a list of OrderDetails - to the CurrentStore for submission.
         /// </summary>
-        public void SubmitCart()
+        public void SubmitCart(Location location, Customer customer)
         {
-            CurrentStore.SubmitOrder(CurrentCustomer, _cart);
+            location.SubmitOrder(customer, _cart);
             ClearCart();
         }
     }

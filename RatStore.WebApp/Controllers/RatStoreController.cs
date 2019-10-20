@@ -12,9 +12,7 @@ namespace RatStore.WebApp.Controllers
     public class RatStoreController : Controller
     {
         IDataStore _dataStore;
-        Logic.Customer _currentCustomer;
-        
-        public bool LoggedIn { get; set; }
+        static Models.BaseViewModel _baseViewModel = new Models.BaseViewModel();
 
         public RatStoreController(IDataStore dataStore)
         {
@@ -24,7 +22,7 @@ namespace RatStore.WebApp.Controllers
         // GET: RatStore
         public ActionResult Index()
         {
-            return View();
+            return View(_baseViewModel);
         }
 
         // GET: RatStore/Details/5
@@ -33,6 +31,7 @@ namespace RatStore.WebApp.Controllers
             return View();
         }
 
+        #region Create
         // GET: RatStore/Create
         public ActionResult Create()
         {
@@ -54,11 +53,13 @@ namespace RatStore.WebApp.Controllers
                 return View();
             }
         }
+        #endregion
 
+        #region CreateCustomer
         // GET: RatStore/CreateCustomer
         public ActionResult CreateCustomer()
         {
-            return View();
+            return View(new Models.CreateCustomerViewModel(_baseViewModel));
         }
 
         // POST: RatStore/CreateCustomer
@@ -87,14 +88,16 @@ namespace RatStore.WebApp.Controllers
             }
             catch
             {
-                return View();
+                return View(new Models.CreateCustomerViewModel(_baseViewModel));
             }
         }
+        #endregion
 
+        #region LogIn
         // GET: RatStore/LogIn
         public ActionResult LogIn()
         {
-            return View();
+            return View(new Models.LogInViewModel(_baseViewModel));
         }
 
         // POST: RatStore/LogIn
@@ -104,20 +107,24 @@ namespace RatStore.WebApp.Controllers
         {
             try
             {
-                _currentCustomer = _dataStore.GetCustomerByUsernameAndPassword(collection["Username"], collection["Password"]);
+                _baseViewModel.CurrentCustomer = _dataStore.GetCustomerByUsernameAndPassword(collection["Username"], collection["Password"]);
 
                 // TODO: Handle non-existent/incorrect credentials w/ error message
-                if (_currentCustomer == null)
+                if (_baseViewModel.CurrentCustomer == null)
                     throw new NullReferenceException("Customer not found.");
+
+                _baseViewModel.LoggedIn = true;
 
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(new Models.LogInViewModel(_baseViewModel));
             }
         }
+        #endregion
 
+        #region Edit
         // GET: RatStore/Edit/5
         public ActionResult Edit(int id)
         {
@@ -140,7 +147,9 @@ namespace RatStore.WebApp.Controllers
                 return View();
             }
         }
+        #endregion
 
+        #region Delete
         // GET: RatStore/Delete/5
         public ActionResult Delete(int id)
         {
@@ -163,5 +172,6 @@ namespace RatStore.WebApp.Controllers
                 return View();
             }
         }
+        #endregion
     }
 }
