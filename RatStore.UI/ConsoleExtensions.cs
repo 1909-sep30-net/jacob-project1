@@ -46,7 +46,7 @@ namespace RatStore.UI
 
         public static void PrintAvailableProducts(this Location location)
         {
-            List<Product> availableProducts = location.GetAvailableProducts();
+            List<Product> availableProducts = location.GetAvailableProducts().Keys.ToList();
             if (availableProducts.Count == 0)
                 Console.WriteLine("This store has no products to sell! Please type 'end' and try another store.");
             else

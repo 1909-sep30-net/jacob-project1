@@ -33,14 +33,6 @@ namespace RatStore.Logic
         /// <param name="customer"></param>
         void AddCustomer(Customer customer);
         /// <summary>
-        /// Create a Customer from the given info and add them to the data store.
-        /// </summary>
-        /// <param name="firstName"></param>
-        /// <param name="middleName"></param>
-        /// <param name="lastName"></param>
-        /// <param name="phoneNumber"></param>
-        void AddCustomer(string username, string password, string firstName, string middleName, string lastName, string phoneNumber);
-        /// <summary>
         /// Get a Customer from the data store by name and phone.
         /// </summary>
         /// <param name="firstName"></param>

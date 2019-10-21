@@ -8,9 +8,18 @@ namespace RatStore.Logic
     {
         List<OrderDetails> _cart;
 
+        public List<OrderDetails> OrderDetails {  get { return _cart;  } }
+
         public Cart()
         {
             _cart = new List<OrderDetails>();
+        }
+
+        public override string ToString()
+        {
+            if (_cart.Count == 1)
+                return "Cart (1 item)";
+            else return $"Cart ({_cart.Count} items)";
         }
 
         public decimal Subtotal
@@ -28,7 +37,7 @@ namespace RatStore.Logic
         }
 
         /// <summary>
-        /// Verifies that the CurrentStore can fulfill the product request and then adds it to the Cart.
+        /// Verifies that the given location can fulfill the entire order, including the requested product, and then adds it to the Cart.
         /// </summary>
         /// <param name="productId"></param>
         /// <param name="quantity"></param>
@@ -72,7 +81,7 @@ namespace RatStore.Logic
         }
 
         /// <summary>
-        /// Passes the Cart - a list of OrderDetails - to the CurrentStore for submission.
+        /// Passes the Cart - a list of OrderDetails - to the given store for submission.
         /// </summary>
         public void SubmitCart(Location location, Customer customer)
         {

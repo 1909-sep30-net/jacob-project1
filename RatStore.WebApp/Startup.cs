@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +37,13 @@ namespace RatStore.WebApp
             });
 
             services.AddScoped<IDataStore, DatabaseStore>();
+            services.AddScoped<Models.IBaseViewModel, Models.BaseViewModel>();
+
+            services.AddHttpContextAccessor();
+            //services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            services.AddDistributedMemoryCache();
+            services.AddSession();
 
             services.AddControllersWithViews();
         }
@@ -58,6 +67,8 @@ namespace RatStore.WebApp
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

@@ -115,7 +115,8 @@ namespace RatStore.Logic
                 FirstName = customer.FirstName,
                 MiddleName = customer.MiddleName,
                 LastName = customer.LastName,
-                PhoneNumber = customer.PhoneNumber
+                PhoneNumber = customer.PhoneNumber,
+                PreferredStoreId = (int)customer.PreferredStoreId
             };
         }
         /// <summary>
@@ -133,7 +134,8 @@ namespace RatStore.Logic
                 FirstName = customer.FirstName,
                 MiddleName = customer.MiddleName,
                 LastName = customer.LastName,
-                PhoneNumber = customer.PhoneNumber
+                PhoneNumber = customer.PhoneNumber,
+                PreferredStoreId = customer.PreferredStoreId
             };
         }
         #endregion

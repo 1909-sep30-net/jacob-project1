@@ -155,7 +155,7 @@ namespace RatStore.Logic
             if (!ValidateOrder(o))
                 throw new Exception("Order must have at least one item");
 
-            if (!CanFulfillOrder(o))
+            if (!CanFulfillOrder(o.OrderDetails))
                 throw new Exception("Inventory has insufficient components");
 
             foreach (OrderDetails detail in orderDetails)

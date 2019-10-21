@@ -21,6 +21,12 @@ CREATE TABLE [ProductComponent] (
 )
 GO
 
+CREATE TABLE [Location] (
+  [locationId] int PRIMARY KEY IDENTITY(1, 1),
+  [address] nvarchar(255)
+)
+GO
+
 CREATE TABLE [Customer] (
   [customerId] int PRIMARY KEY IDENTITY(1, 1),
   [username] nvarchar(255) UNIQUE,
@@ -28,13 +34,8 @@ CREATE TABLE [Customer] (
   [firstName] nvarchar(255),
   [middleName] nvarchar(255),
   [lastName] nvarchar(255),
-  [phoneNumber] nvarchar(255)
-)
-GO
-
-CREATE TABLE [Location] (
-  [locationId] int PRIMARY KEY IDENTITY(1, 1),
-  [address] nvarchar(255)
+  [phoneNumber] nvarchar(255),
+  [preferredStoreId] int FOREIGN KEY REFERENCES [Location](locationId) DEFAULT(1)
 )
 GO
 

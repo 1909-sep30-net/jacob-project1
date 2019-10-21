@@ -17,7 +17,9 @@ namespace RatStore.Data.Entities
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public string PhoneNumber { get; set; }
+        public int? PreferredStoreId { get; set; }
 
+        public virtual Location PreferredStore { get; set; }
         public virtual ICollection<Order> Order { get; set; }
     }
 }

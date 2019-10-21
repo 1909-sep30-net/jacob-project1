@@ -1,4 +1,4 @@
-﻿@model BaseViewModel
+﻿@model IBaseViewModel
 
 <!DOCTYPE html>
 <html lang="en">
@@ -29,6 +29,10 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="RatStore" asp-action="Profile">@Model.CurrentCustomer.FirstName</a>
                             </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="RatStore" asp-action="Cart">@Model.Cart.ToString()</a>
+                            </li>
                         }
                         else
                         {
@@ -49,7 +53,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2019 - RatStore.WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2019 - The Rat Store
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

@@ -14,7 +14,7 @@ namespace RatStore.UI
     public class Navigator
     {
         List<OrderDetails> _cart;
-        public RatStore.Logic.RatStore CurrentStore { get; set; }
+        public RatStore CurrentStore { get; set; }
 
         public Customer CurrentCustomer { get; set; }
 
@@ -53,7 +53,7 @@ namespace RatStore.UI
         /// <param name="quantity"></param>
         public void AddProductToCart(int productId, int quantity)
         {
-            List<Product> availableProducts = CurrentStore.GetAvailableProducts();
+            List<Product> availableProducts = CurrentStore.GetAvailableProducts().Keys.ToList();
             if (productId > availableProducts.Count || productId < 0)
                 throw new Exception("Invalid product id");
 

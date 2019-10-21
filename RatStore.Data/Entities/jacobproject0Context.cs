@@ -50,7 +50,7 @@ namespace RatStore.Data.Entities
             modelBuilder.Entity<Customer>(entity =>
             {
                 entity.HasIndex(e => e.Username)
-                    .HasName("UQ__Customer__F3DBC5729117628B")
+                    .HasName("UQ__Customer__F3DBC572C4DC95EA")
                     .IsUnique();
 
                 entity.Property(e => e.CustomerId).HasColumnName("customerId");
@@ -75,15 +75,24 @@ namespace RatStore.Data.Entities
                     .HasColumnName("phoneNumber")
                     .HasMaxLength(255);
 
+                entity.Property(e => e.PreferredStoreId)
+                    .HasColumnName("preferredStoreId")
+                    .HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.Username)
                     .HasColumnName("username")
                     .HasMaxLength(255);
+
+                entity.HasOne(d => d.PreferredStore)
+                    .WithMany(p => p.Customer)
+                    .HasForeignKey(d => d.PreferredStoreId)
+                    .HasConstraintName("FK__Customer__prefer__66B53B20");
             });
 
             modelBuilder.Entity<Inventory>(entity =>
             {
                 entity.HasKey(e => new { e.LocationId, e.ComponentId })
-                    .HasName("PK__Inventor__4603C7422CC0D968");
+                    .HasName("PK__Inventor__4603C7420A5A355D");
 
                 entity.Property(e => e.LocationId).HasColumnName("locationId");
 
@@ -95,13 +104,13 @@ namespace RatStore.Data.Entities
                     .WithMany(p => p.Inventory)
                     .HasForeignKey(d => d.ComponentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Inventory__compo__3DB3258D");
+                    .HasConstraintName("FK__Inventory__compo__5772F790");
 
                 entity.HasOne(d => d.Location)
                     .WithMany(p => p.Inventory)
                     .HasForeignKey(d => d.LocationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Inventory__locat__3CBF0154");
+                    .HasConstraintName("FK__Inventory__locat__567ED357");
             });
 
             modelBuilder.Entity<Location>(entity =>
@@ -129,18 +138,18 @@ namespace RatStore.Data.Entities
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.Order)
                     .HasForeignKey(d => d.CustomerId)
-                    .HasConstraintName("FK__Order__customerI__4277DAAA");
+                    .HasConstraintName("FK__Order__customerI__6D6238AF");
 
                 entity.HasOne(d => d.Location)
                     .WithMany(p => p.Order)
                     .HasForeignKey(d => d.LocationId)
-                    .HasConstraintName("FK__Order__locationI__4183B671");
+                    .HasConstraintName("FK__Order__locationI__6C6E1476");
             });
 
             modelBuilder.Entity<OrderDetails>(entity =>
             {
                 entity.HasKey(e => new { e.OrderId, e.ProductId })
-                    .HasName("PK__OrderDet__BAD83E4BE3BE8456");
+                    .HasName("PK__OrderDet__BAD83E4BBCD7F5C6");
 
                 entity.Property(e => e.OrderId).HasColumnName("orderId");
 
@@ -152,13 +161,13 @@ namespace RatStore.Data.Entities
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.OrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__OrderDeta__order__45544755");
+                    .HasConstraintName("FK__OrderDeta__order__703EA55A");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__OrderDeta__produ__46486B8E");
+                    .HasConstraintName("FK__OrderDeta__produ__7132C993");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -173,7 +182,7 @@ namespace RatStore.Data.Entities
             modelBuilder.Entity<ProductComponent>(entity =>
             {
                 entity.HasKey(e => new { e.ProductId, e.ComponentId })
-                    .HasName("PK__ProductC__5B777D46530D1B34");
+                    .HasName("PK__ProductC__5B777D4620B911D6");
 
                 entity.Property(e => e.ProductId).HasColumnName("productId");
 
@@ -185,13 +194,13 @@ namespace RatStore.Data.Entities
                     .WithMany(p => p.ProductComponent)
                     .HasForeignKey(d => d.ComponentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ProductCo__compo__351DDF8C");
+                    .HasConstraintName("FK__ProductCo__compo__4DE98D56");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.ProductComponent)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ProductCo__produ__3429BB53");
+                    .HasConstraintName("FK__ProductCo__produ__4CF5691D");
             });
 
             OnModelCreatingPartial(modelBuilder);

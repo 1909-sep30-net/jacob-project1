@@ -1,0 +1,20 @@
+﻿@model IBaseViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h1>Profile</h1>
+
+<div>
+    <br />
+    <p>@Html.ActionLink("View your order history", "OrderHistory", new { Model })</p>
+    <br />
+    <p>Current Store: @Model.CurrentLocation.Address</p>
+    <p>@Html.ActionLink("Change your store", "SelectStore", new { Model })</p>
+</div>
+<div>
+    <br />
+    <br />
+    <a asp-action="Index">Back to Index</a>
+</div>

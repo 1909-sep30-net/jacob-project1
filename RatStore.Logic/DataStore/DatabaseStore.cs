@@ -20,7 +20,7 @@ namespace RatStore.Logic
         public DatabaseStore()
         {
             _options = new DbContextOptionsBuilder<Data.Entities.jacobproject0Context>()
-                .UseSqlServer(Data.Entities.SecretCode.Sauce)
+                .UseSqlServer(SecretCode.Sauce)
                 .EnableSensitiveDataLogging()
                 .Options;
 
@@ -71,7 +71,8 @@ namespace RatStore.Logic
             Data.Entities.Customer newCustomer = Mapper.MapCustomer(customer);
             _context.Customer.Add(newCustomer);
         }
-        public void AddCustomer(string username, string password, string firstName, string middleName, string lastName, string phoneNumber)
+        // Note to self: this kind of add method is hard to maintain.
+        /*public void AddCustomer(string username, string password, string firstName, string middleName, string lastName, string phoneNumber)
         {
             Customer customer = new Customer
             {
@@ -84,7 +85,7 @@ namespace RatStore.Logic
             };
 
             AddCustomer(customer);
-        }
+        }*/
         public Customer GetCustomerByNameAndPhone(string firstName, string lastName, string phoneNumber)
             => _context.Customer.Select(Mapper.MapCustomer).Where(c => c.FirstName == firstName && c.LastName == lastName && c.PhoneNumber == phoneNumber).FirstOrDefault();
         public Customer GetCustomerById(int id)
