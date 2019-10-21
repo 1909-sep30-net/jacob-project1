@@ -39,9 +39,10 @@ namespace RatStore.WebApp
             services.AddScoped<IDataStore, DatabaseStore>();
             services.AddScoped<Models.IBaseViewModel, Models.BaseViewModel>();
 
+            // This lets dependency injection use Session
             services.AddHttpContextAccessor();
-            //services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
+            // These set up session to use the cache
             services.AddDistributedMemoryCache();
             services.AddSession();
 
@@ -68,6 +69,7 @@ namespace RatStore.WebApp
 
             app.UseAuthorization();
 
+            // This activates the session (?)
             app.UseSession();
 
             app.UseEndpoints(endpoints =>
