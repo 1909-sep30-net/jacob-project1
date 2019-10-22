@@ -1,5 +1,7 @@
 ﻿@model IBaseViewModel
 
+@using RatStore.Logic
+
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -16,3 +18,38 @@
         <p>You must log in to place an order.</p>
     }
 </div>
+
+<br />
+
+@if (Model.LoggedIn)
+{
+    Dictionary<Product, int> availableProducts = Model.CurrentLocation.GetAvailableProducts(Model.Cart.OrderDetails);
+    bool rendered = false;
+
+    <div>
+        @foreach (Product p in availableProducts.Keys)
+        {
+            if (availableProducts[p] > 0)
+            {
+                <dl class="row">
+                    <dt class="col">
+                        @p.Name
+                    </dt>
+                    <dd class="col-sm-10">
+                        @string.Format("{0:c}", p.Cost) (@availableProducts[p] max.)
+                    </dd>
+                    <dd class="col-sm-10">
+                        @Html.ActionLink("Add...", "AddToCart", new { id = p.ProductId })
+                    </dd>
+                </dl>
+
+                rendered = true;
+            }
+        }
+
+        @if (!rendered)
+        {
+            <p>This store has no products to add to your cart.</p>
+        }
+</div>
+}

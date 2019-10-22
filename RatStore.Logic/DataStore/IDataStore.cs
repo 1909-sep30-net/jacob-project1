@@ -112,6 +112,12 @@ namespace RatStore.Logic
         /// <returns></returns>
         Product GetProductByName(string name);
         /// <summary>
+        /// Gets the Product with the given id from the data store.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        Product GetProductById(int id);
+        /// <summary>
         /// Gets a list of all Products in memory from the data store.
         /// </summary>
         /// <returns></returns>

@@ -13,10 +13,12 @@ namespace RatStore.WebApp.Models
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private ISession _session => _httpContextAccessor.HttpContext.Session;
+        private IDataStore _dataStore;
 
-        public BaseViewModel([FromServices] IHttpContextAccessor httpContextAccessor)
+        public BaseViewModel([FromServices] IHttpContextAccessor httpContextAccessor, IDataStore dataStore)
         {
             _httpContextAccessor = httpContextAccessor;
+            _dataStore = dataStore;
         }
 
         public BaseViewModel(BaseViewModel other)
@@ -52,11 +54,13 @@ namespace RatStore.WebApp.Models
             {
                 try
                 {
-                    return JsonConvert.DeserializeObject<Location>(_session.GetString("CurrentLocation"));
+                    Location location = JsonConvert.DeserializeObject<Location>(_session.GetString("CurrentLocation"));
+                    location.DataStore = _dataStore;
+                    return location;
                 }
                 catch (Exception e)
                 {
-                    Location location = new Location();
+                    Location location = new Location(_dataStore);
                     CurrentLocation = location;
                     return location;
                 }

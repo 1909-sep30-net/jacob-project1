@@ -202,6 +202,11 @@ namespace RatStore.Logic
                 .Include(p => p.ProductComponent)
                 .ThenInclude(pc => pc.Component)
                 .First(p => p.Name == name));
+        public Product GetProductById(int id)
+            => Mapper.MapProduct(_context.Product
+                .Include(p => p.ProductComponent)
+                .ThenInclude(pc => pc.Component)
+                .First(p => p.ProductId == id));
         public List<Product> GetAllProducts()
         {
             IQueryable<Data.Entities.Product> products = _context.Product

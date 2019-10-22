@@ -27,17 +27,99 @@ namespace RatStore.WebApp.Controllers
             return View(_baseViewModel);
         }
 
-        // GET: RatStore/Cart/5
+        // GET: RatStore/Cart/
         public ActionResult Cart()
         {
             return View(_baseViewModel);
         }
 
-        // GET: RatStore/Cart/5
+        // GET: RatStore/Profile/
         public ActionResult Profile()
         {
             return View(_baseViewModel);
         }
+
+        // GET: RatStore/RemoveItem/5
+        public ActionResult RemoveItem(int id)
+        {
+            Cart tempCart = _baseViewModel.Cart;
+            OrderDetails target = tempCart.OrderDetails.Find(od => od.Product.ProductId == id);
+            tempCart.OrderDetails.Remove(target);
+            _baseViewModel.Cart = tempCart;
+
+            return RedirectToAction(nameof(Cart));
+        }
+
+        // GET: RatStore/SubmitOrder
+        public ActionResult SubmitOrder()
+        {
+            Location tempLocation = _baseViewModel.CurrentLocation;
+            tempLocation.SubmitOrder(_baseViewModel.CurrentCustomer, _baseViewModel.Cart.OrderDetails);
+
+            _baseViewModel.Cart = new Cart();
+            _baseViewModel.CurrentLocation = _dataStore.GetLocationById(_baseViewModel.CurrentLocation.LocationId);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: RatStore/OrderHistory
+        public ActionResult OrderHistory()
+        {
+            Models.OrderHistoryViewModel viewModel = new Models.OrderHistoryViewModel((Models.BaseViewModel)_baseViewModel);
+            viewModel.OrderHistory = _dataStore.GetOrderHistory(_baseViewModel.CurrentCustomer.CustomerId);
+
+            return View(viewModel);
+        }
+
+        #region AddToCart
+        // GET: RatStore/AddToCart/5
+        public ActionResult AddToCart(int id)
+        {
+            Models.AddToCartViewModel viewModel = new Models.AddToCartViewModel((Models.BaseViewModel)_baseViewModel);
+            viewModel.Product = _dataStore.GetProductById(id);
+            return View(viewModel);
+        }
+
+        // POST: RatStore/AddToCart/
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddToCart(IFormCollection collection)
+        {
+            try
+            {
+                // Make a temp copy
+                Cart tempCart = new Cart();
+                foreach (OrderDetails orderDetails in _baseViewModel.Cart.OrderDetails)
+                {
+                    tempCart.OrderDetails.Add(orderDetails);
+                }
+
+                // Add the request to it
+                tempCart.AddProductToCart(_baseViewModel.CurrentCustomer,
+                    _baseViewModel.CurrentLocation,
+                    _dataStore.GetProductById(int.Parse(collection["Product.ProductId"].ToString())),
+                    int.Parse(collection["Quantity"].ToString())
+                    );
+
+                //Check that the temp copy could be fulfilled before accepting it.
+                if (_baseViewModel.CurrentLocation.CanFulfillOrder(tempCart.OrderDetails))
+                {
+                    _baseViewModel.Cart = tempCart;
+                    return RedirectToAction(nameof(Index));
+                }
+
+                // Error handling
+                Models.AddToCartViewModel viewModel = new Models.AddToCartViewModel((Models.BaseViewModel)_baseViewModel);
+                viewModel.Product = _dataStore.GetProductById(int.Parse(collection["Product.ProductId"].ToString()));
+                ModelState.AddModelError("Quantity", "Store cannot fulfill this quantity.");
+                return View(viewModel);
+            }
+            catch
+            {
+                return View(new Models.AddToCartViewModel((Models.BaseViewModel)_baseViewModel));
+            }
+        }
+        #endregion
 
         #region SelectStore
         // GET: RatStore/SelectStore/5
@@ -55,6 +137,7 @@ namespace RatStore.WebApp.Controllers
             {
                 _baseViewModel.CurrentLocation = _dataStore.GetLocationById(id);
                 _baseViewModel.CurrentCustomer.PreferredStoreId = id;
+                _baseViewModel.Cart = new Cart();
 
                 return RedirectToAction(nameof(Profile));
             }
@@ -136,6 +219,7 @@ namespace RatStore.WebApp.Controllers
         }
         #endregion
 
+        #region Prefab
         #region Details
         // GET: RatStore/Details/5
         public ActionResult Details(int id)
@@ -216,6 +300,7 @@ namespace RatStore.WebApp.Controllers
                 return View();
             }
         }
+        #endregion
         #endregion
     }
 }

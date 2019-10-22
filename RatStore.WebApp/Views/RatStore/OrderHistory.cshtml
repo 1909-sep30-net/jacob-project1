@@ -1,0 +1,31 @@
+﻿@model OrderHistoryViewModel
+
+@using  RatStore.Logic
+
+@{
+    ViewData["Title"] = "OrderHistory";
+
+}
+
+<h1>Order History</h1>
+
+<div>
+    <hr />
+    @foreach (Order order in Model.OrderHistory)
+    {
+        <dl class="row">
+            <dt class="col">
+                Ordered @order.OrderDetails.Count() types of items on @order.OrderDate.ToShortDateString():
+            </dt>
+            <dd class="col">
+                @foreach (OrderDetails orderDetails in order.OrderDetails)
+                {
+                    <p>@orderDetails.Quantity of @orderDetails.Product.Name  for @(string.Format("{0:c}", orderDetails.Product.Cost*orderDetails.Quantity))</p>
+                }
+            </dd>
+        </dl>
+    }
+</div>
+<div>
+    <a asp-action="Profile">Back to Profile</a>
+</div>

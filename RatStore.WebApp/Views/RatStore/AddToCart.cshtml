@@ -1,0 +1,34 @@
+﻿@model RatStore.WebApp.Models.AddToCartViewModel
+
+@{
+    ViewData["Title"] = "AddToCart";
+}
+
+<h1>AddToCart</h1>
+
+<h4>AddToCartViewModel</h4>
+<hr />
+<div class="row">
+    <form asp-action="AddToCart">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <p>Ordering @Model.Product.Name. How many would you like?</p>
+        <div class="form-group">
+            <label asp-for="Quantity" class="control-label"></label>
+            <input asp-for="Quantity" class="form-control" autocomplete="off"/>
+            <span asp-validation-for="Quantity" class="text-danger"></span>
+
+            @Html.HiddenFor(m => m.Product.ProductId)
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Add to Cart" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+<div>
+    <a asp-action="Index">Back to Home</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

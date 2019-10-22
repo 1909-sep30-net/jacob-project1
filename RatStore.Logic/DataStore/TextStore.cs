@@ -309,6 +309,16 @@ namespace RatStore.Logic
 
             throw new Exception($"No recipe found with name: {name}");
         }
+        public Product GetProductById(int id)
+        {
+            foreach (Product product in Products)
+            {
+                if (product.ProductId == id)
+                    return product;
+            }
+
+            throw new Exception($"No recipe found with id: {id}");
+        }
         public List<Product> GetAllProducts()
         {
             return new List<Product>(Products);

@@ -61,15 +61,6 @@ namespace RatStore.Logic
                 cartItem = _cart.Find(item => item.Product.ProductId == product.ProductId);
                 cartItem.Quantity += quantity;
             }
-
-            if (!location.CanFulfillOrder(_cart))
-            {
-                cartItem.Quantity -= quantity;
-                if (cartItem.Quantity == 0)
-                    _cart.Remove(cartItem);
-
-                throw new Exception($"Inventory cannot fulfill quantity: {product.Name} x {quantity}");
-            }
         }
 
         /// <summary>

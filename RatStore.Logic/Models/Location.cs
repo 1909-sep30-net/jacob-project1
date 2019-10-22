@@ -6,7 +6,7 @@ namespace RatStore.Logic
 {
     public class Location
     {
-        public IDataStore DataStore { get; protected set; }
+        public IDataStore DataStore { get; set; }
 
         public string Address { get; set; }
 
@@ -23,6 +23,15 @@ namespace RatStore.Logic
             Inventory = new List<Inventory>();
             AvailableProducts = new List<Product>();
             OrderHistory = new List<Order>();
+        }
+
+        public Location(IDataStore dataStore)
+        {
+            Inventory = new List<Inventory>();
+            AvailableProducts = new List<Product>();
+            OrderHistory = new List<Order>();
+
+            DataStore = dataStore;
         }
 
         /// <summary>
@@ -58,6 +67,25 @@ namespace RatStore.Logic
             return availableProducts;
         }
         /// <summary>
+        /// Constructs a dictionary of Products that the store can theoretically provide and the maximum quantity.
+        /// This dictionary takes into account the potential order represented by cart.
+        /// </summary>
+        /// <returns>List of Products</returns>
+        public Dictionary<Product, int> GetAvailableProducts(List<OrderDetails> cart)
+        {
+            Dictionary<Product, int> availableProducts = new Dictionary<Product, int>();
+            List<Product> allProducts = DataStore.GetAllProducts();
+
+            foreach (Product p in allProducts)
+            {
+                if (cart.Exists(od => od.Product.ProductId == p.ProductId))
+                    availableProducts.Add(p, FindMaximumQty(p) - cart.Find(od => od.Product.ProductId == p.ProductId).Quantity);
+                else availableProducts.Add(p, FindMaximumQty(p));
+            }
+
+            return availableProducts;
+        }
+        /// <summary>
         /// Uses binary search to find the highest quantity the current inventory can fulfill.
         /// </summary>
         /// <param name="product"></param>
@@ -67,9 +95,16 @@ namespace RatStore.Logic
             int low = 1, high = 100;
             int qty;
 
+            foreach (ProductComponent pc in product.Ingredients)
+            {
+                Inventory item = Inventory.Find(i => i.Component.ComponentId == pc.Component.ComponentId);
+                if (item == null || item.Quantity < pc.Quantity)
+                    return 0;
+            }
+
             do
             {
-                qty = (high - low) / 2;
+                qty = low + ((high - low + 1) / 2);
 
                 if (CanFulfillProductQty(new OrderDetails { Product = product, Quantity = qty }))
                 {
@@ -79,7 +114,7 @@ namespace RatStore.Logic
                 {
                     high = qty;
                 }
-            } while (high - low > 0);
+            } while (high - low > 1);
 
             return qty;
         }
@@ -107,24 +142,27 @@ namespace RatStore.Logic
         public bool CanFulfillOrder(List<OrderDetails> orderDetails)
         {
             Dictionary<Component, int> inventoryOrder = new Dictionary<Component, int>();
+
+            // Get the total number of each component required.
             foreach (OrderDetails od in orderDetails)
             {
                 foreach (ProductComponent c in od.Product.Ingredients)
                 {
                     if (inventoryOrder.ContainsKey(c.Component))
                     {
-                        inventoryOrder[c.Component] += c.Quantity;
+                        inventoryOrder[c.Component] += c.Quantity*od.Quantity;
                     }
                     else
                     {
-                        inventoryOrder.Add(c.Component, c.Quantity);
+                        inventoryOrder.Add(c.Component, c.Quantity*od.Quantity);
                     }
                 }
             }
 
+            // CHeck if the inventory matches or exceeds the needed number
             foreach (Inventory i in Inventory)
             {
-                if (!inventoryOrder.ContainsKey(i.Component) || i.Quantity < inventoryOrder[i.Component])
+                if (inventoryOrder.ContainsKey(i.Component) && i.Quantity < inventoryOrder[i.Component])
                     return false;
             }
 

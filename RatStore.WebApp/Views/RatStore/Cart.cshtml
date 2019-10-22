@@ -26,10 +26,11 @@
                     @orderDetails.Quantity.ToString()
                 </dd>
                 <dd class="col-sm-10">
-                    @Html.ActionLink("Remove", "RemoveItem", new { orderDetails.Product.ProductId })
+                    @Html.ActionLink("Remove", "RemoveItem", new { id = orderDetails.Product.ProductId })
                 </dd>
             </dl>
         }
+        @Html.ActionLink("Submit Order", "SubmitOrder")
     }
 </div>
 <div>
