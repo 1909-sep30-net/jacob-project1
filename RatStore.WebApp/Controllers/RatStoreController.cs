@@ -14,10 +14,10 @@ namespace RatStore.WebApp.Controllers
         IDataStore _dataStore;
         Models.IBaseViewModel _baseViewModel;
 
-        public RatStoreController(IDataStore dataStore, Models.IBaseViewModel baseViewModel, [FromServices] IHttpContextAccessor httpContextAccessor)
+        public RatStoreController(IDataStore dataStore, Models.IBaseViewModel baseViewModel
+            , [FromServices] IHttpContextAccessor httpContextAccessor)
         {
             _dataStore = dataStore;
-
             _baseViewModel = baseViewModel;
         }
 
@@ -137,6 +137,8 @@ namespace RatStore.WebApp.Controllers
             {
                 _baseViewModel.CurrentLocation = _dataStore.GetLocationById(id);
                 _baseViewModel.CurrentCustomer.PreferredStoreId = id;
+
+                // Clear the cart
                 _baseViewModel.Cart = new Cart();
 
                 return RedirectToAction(nameof(Profile));
@@ -172,9 +174,7 @@ namespace RatStore.WebApp.Controllers
                     PhoneNumber = collection["PhoneNumber"].ToString(),
                     PreferredStoreId = 1
                 };
-
-                // Validate customer, throw exception for bad entries
-
+                
                 _dataStore.AddCustomer(newCustomer);
                 _dataStore.Save();
 

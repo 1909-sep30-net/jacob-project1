@@ -7,7 +7,7 @@ using RatStore.Logic;
 
 namespace RatStore.WebApp.Models
 {
-    public class AddToCartViewModel : BaseViewModel, IValidatableObject
+    public class AddToCartViewModel : BaseViewModel
     {
         public AddToCartViewModel(BaseViewModel _base) : base(_base)
         {
@@ -19,14 +19,5 @@ namespace RatStore.WebApp.Models
         [Range(0, 100)]
         [Required(ErrorMessage = "This field cannot be blank.")]
         public int? Quantity { get; set; }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            List<OrderDetails> runningCart = Cart.OrderDetails;
-            runningCart.Add(new OrderDetails { Product = this.Product, Quantity = (int)this.Quantity });
-
-            if (!CurrentLocation.CanFulfillOrder(runningCart))
-                yield return new ValidationResult("Store cannot fulfill this quantity.");
-        }
     }
 }

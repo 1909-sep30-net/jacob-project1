@@ -9,6 +9,11 @@ using RatStore.Logic;
 
 namespace RatStore.WebApp.Models
 {
+    /// <summary>
+    /// Carries JSON Serializer wrappers under property getter and setters for the current cutsomer,
+    /// current location, running cart, and whether a user is logged in. Uses dependency injection
+    /// to grab the Session accessor and the database context.
+    /// </summary>
     public class BaseViewModel : IBaseViewModel
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
