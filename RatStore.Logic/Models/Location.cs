@@ -73,6 +73,7 @@ namespace RatStore.Logic
         /// <returns>List of Products</returns>
         public Dictionary<Product, int> GetAvailableProducts(List<OrderDetails> cart)
         {
+            // TODO: Need to consider COMPONENTS not PRODUCTS
             Dictionary<Product, int> availableProducts = new Dictionary<Product, int>();
             List<Product> allProducts = DataStore.GetAllProducts();
 
@@ -93,7 +94,7 @@ namespace RatStore.Logic
         int FindMaximumQty(Product product)
         {
             int low = 1, high = 100;
-            int qty;
+            int qty = 50;
 
             foreach (ProductComponent pc in product.Ingredients)
             {
@@ -102,10 +103,8 @@ namespace RatStore.Logic
                     return 0;
             }
 
-            do
+            while (high - low > 1)
             {
-                qty = low + ((high - low + 1) / 2);
-
                 if (CanFulfillProductQty(new OrderDetails { Product = product, Quantity = qty }))
                 {
                     low = qty;
@@ -114,9 +113,11 @@ namespace RatStore.Logic
                 {
                     high = qty;
                 }
-            } while (high - low > 1);
 
-            return qty;
+                qty = low + ((high - low + 1) / 2);
+            }
+
+            return qty - 1;
         }
         /// <summary>
         /// Checks whether the store's inventory can provide a single product at a given quantitiy, stored in an OrderDetail.

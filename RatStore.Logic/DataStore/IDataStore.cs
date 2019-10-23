@@ -52,7 +52,7 @@ namespace RatStore.Logic
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        Customer GetCustomerByUsernameAndPassword(string username, string password);
+        Customer GetCustomerByUsernameAndPassword(string username, string password = "");
         /// <summary>
         /// Gets a list in memory of all customers in the data store.
         /// </summary>

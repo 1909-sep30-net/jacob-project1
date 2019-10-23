@@ -4,7 +4,6 @@
 
 @{
     ViewData["Title"] = "OrderHistory";
-
 }
 
 <h1>Order History</h1>
@@ -13,14 +12,15 @@
     <hr />
     @foreach (Order order in Model.OrderHistory)
     {
+        int count = order.OrderDetails.Count();
         <dl class="row">
             <dt class="col">
-                Ordered @order.OrderDetails.Count() types of items on @order.OrderDate.ToShortDateString():
+                Ordered @count @( (count != 1) ? "types" : "type") of items on @order.OrderDate.ToShortDateString():
             </dt>
             <dd class="col">
                 @foreach (OrderDetails orderDetails in order.OrderDetails)
                 {
-                    <p>@orderDetails.Quantity of @orderDetails.Product.Name  for @(string.Format("{0:c}", orderDetails.Product.Cost*orderDetails.Quantity))</p>
+                    <p>@orderDetails.Quantity of @orderDetails.Product.Name  for @(string.Format("{0:c}", orderDetails.Product.Cost * orderDetails.Quantity))</p>
                 }
             </dd>
         </dl>

@@ -42,12 +42,19 @@ namespace RatStore.WebApp.Controllers
         // GET: RatStore/RemoveItem/5
         public ActionResult RemoveItem(int id)
         {
-            Cart tempCart = _baseViewModel.Cart;
-            OrderDetails target = tempCart.OrderDetails.Find(od => od.Product.ProductId == id);
-            tempCart.OrderDetails.Remove(target);
-            _baseViewModel.Cart = tempCart;
+            try
+            {
+                Cart tempCart = _baseViewModel.Cart;
+                OrderDetails target = tempCart.OrderDetails.Find(od => od.Product.ProductId == id);
+                tempCart.OrderDetails.Remove(target);
+                _baseViewModel.Cart = tempCart;
 
-            return RedirectToAction(nameof(Cart));
+                return RedirectToAction(nameof(Cart));
+            }
+            catch
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // GET: RatStore/SubmitOrder
@@ -75,9 +82,16 @@ namespace RatStore.WebApp.Controllers
         // GET: RatStore/AddToCart/5
         public ActionResult AddToCart(int id)
         {
-            Models.AddToCartViewModel viewModel = new Models.AddToCartViewModel((Models.BaseViewModel)_baseViewModel);
-            viewModel.Product = _dataStore.GetProductById(id);
-            return View(viewModel);
+            try
+            { 
+                Models.AddToCartViewModel viewModel = new Models.AddToCartViewModel((Models.BaseViewModel)_baseViewModel);
+                viewModel.Product = _dataStore.GetProductById(id);
+                return View(viewModel);
+            }
+            catch
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // POST: RatStore/AddToCart/
@@ -145,7 +159,7 @@ namespace RatStore.WebApp.Controllers
             }
             catch
             {
-                return View(_baseViewModel);
+                return RedirectToAction(nameof(Profile));
             }
         }
         #endregion
@@ -174,7 +188,14 @@ namespace RatStore.WebApp.Controllers
                     PhoneNumber = collection["PhoneNumber"].ToString(),
                     PreferredStoreId = 1
                 };
-                
+
+                if (_dataStore.GetAllCustomers().Exists(c => c.Username == newCustomer.Username))
+                {
+                    Models.CreateCustomerViewModel viewModel = new Models.CreateCustomerViewModel((Models.BaseViewModel)_baseViewModel);
+                    ModelState.AddModelError("Username", "Username already exists.");
+                    return View(viewModel);
+                }
+
                 _dataStore.AddCustomer(newCustomer);
                 _dataStore.Save();
 

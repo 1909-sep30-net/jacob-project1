@@ -90,8 +90,13 @@ namespace RatStore.Logic
             => _context.Customer.Select(Mapper.MapCustomer).Where(c => c.FirstName == firstName && c.LastName == lastName && c.PhoneNumber == phoneNumber).FirstOrDefault();
         public Customer GetCustomerById(int id)
             => Mapper.MapCustomer(_context.Customer.Find(id));
-        public Customer GetCustomerByUsernameAndPassword(string username, string password)
-            => Mapper.MapCustomer(_context.Customer.Where(c => c.Username == username && c.Password == password).FirstOrDefault()); 
+        public Customer GetCustomerByUsernameAndPassword(string username, string password = "")
+        {
+            if (password == "")
+                return Mapper.MapCustomer(_context.Customer.Where(c => c.Username == username).FirstOrDefault());
+            else
+                return Mapper.MapCustomer(_context.Customer.Where(c => c.Username == username && c.Password == password).FirstOrDefault());
+        }
         public List<Customer> GetAllCustomers()
         {
             IQueryable<Data.Entities.Customer> customers = _context.Customer

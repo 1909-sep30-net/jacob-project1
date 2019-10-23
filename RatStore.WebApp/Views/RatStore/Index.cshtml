@@ -6,6 +6,7 @@
     ViewData["Title"] = "Home Page";
 }
 
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 <div class="text-center">
     <h1 class="display-4">Welcome to your local Rat Store!</h1>
 
@@ -25,7 +26,6 @@
 {
     Dictionary<Product, int> availableProducts = Model.CurrentLocation.GetAvailableProducts(Model.Cart.OrderDetails);
     bool rendered = false;
-
     <div>
         @foreach (Product p in availableProducts.Keys)
         {
@@ -51,5 +51,5 @@
         {
             <p>This store has no products to add to your cart.</p>
         }
-</div>
+    </div>
 }
