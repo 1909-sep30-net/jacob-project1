@@ -12,7 +12,7 @@ namespace RatStore.UI
         public static IDataStore GetDataStore()
         {
             IDataStore dataStore = new DatabaseStore(new DbContextOptionsBuilder<Data.Entities.jacobproject0Context>()
-                .UseSqlServer(SecretCode.Sauce)
+                /*.UseSqlServer(SecretCode.Sauce)*/
                 .EnableSensitiveDataLogging()
             );
             if (!dataStore.Connected())
