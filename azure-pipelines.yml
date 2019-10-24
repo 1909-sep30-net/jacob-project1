@@ -36,6 +36,11 @@ steps:
 # in this case, this task is both running tests and publishing the results
 # to the build itself
 
+- task: VisualStudioTestPlatformInstaller@1
+  inputs:
+    packageFeedSelector: 'nugetOrg'
+    versionSelector: 'latestPreRelease'
+
 - task: VSTest@2
   inputs:
     testSelector: 'testAssemblies'
