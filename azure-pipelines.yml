@@ -35,18 +35,15 @@ steps:
 # write it all out in script step...
 # in this case, this task is both running tests and publishing the results
 # to the build itself
-- task: DotNetCoreCLI@2
-  displayName: dotnet test
-  inputs:
-    command: 'test'
-    projects: './RatStore.WebApp'
-    arguments: '-c $(buildConfiguration) --collect "XPlat Code Coverage"'
 
-- task: PublishCodeCoverageResults@1
-  displayName: Publish code coverage
+- task: VSTest@2
   inputs:
-    codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\*test*.dll
+      !**\*TestAdapter.dll
+      !**\obj\**
+    searchFolder: '$(System.DefaultWorkingDirectory)'
 
 - task: DotNetCoreCLI@2
   displayName: dotnet publish + zip
