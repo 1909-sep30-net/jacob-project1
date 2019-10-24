@@ -12,19 +12,24 @@ namespace RatStore.Logic
     public class DatabaseStore : IDataStore
     {
         #region Properties
-        private DbContextOptions<Data.Entities.jacobproject0Context> _options;
+        //private DbContextOptions<Data.Entities.jacobproject0Context> _options;
         private Data.Entities.jacobproject0Context _context;
         #endregion
 
         #region Startup and Shutdown
-        public DatabaseStore()
+        public DatabaseStore(DbContextOptionsBuilder<Data.Entities.jacobproject0Context> _options)
         {
-            _options = new DbContextOptionsBuilder<Data.Entities.jacobproject0Context>()
-                .UseSqlServer(SecretCode.Sauce)
-                .EnableSensitiveDataLogging()
-                .Options;
+            _context = new Data.Entities.jacobproject0Context(_options.Options);
 
-            _context = new Data.Entities.jacobproject0Context(_options);
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .CreateLogger();
+        }
+
+        public DatabaseStore(Data.Entities.jacobproject0Context context)
+        {
+            _context = context;
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
