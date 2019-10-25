@@ -23,6 +23,13 @@ steps:
 # - script: dotnet build RestaurantReviews --configuration $(buildConfiguration)
 #   displayName: 'dotnet build $(buildConfiguration)'
 
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'AzureBuild'
+    organization: 'jacobdavis1'
+    scannerMode: 'MSBuild'
+    projectKey: 'jacobdavis1-project1'
+
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
   workingDirectory: ./
@@ -41,6 +48,8 @@ steps:
     packageFeedSelector: 'nugetOrg'
     versionSelector: 'latestPreRelease'
 
+- task: SonarCloudAnalyze@1
+
 - task: VSTest@2
   inputs:
     testSelector: 'testAssemblies'
@@ -57,6 +66,10 @@ steps:
     command: 'publish'
     publishWebProjects: true
     zipAfterPublish: true
+
+    - task: SonarCloudPublish@1
+      inputs:
+        pollingTimeoutSec: '300'
 
 - task: AzureRmWebAppDeployment@4
   inputs:
