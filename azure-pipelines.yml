@@ -7,11 +7,74 @@ trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
+# three different ways to solve the initial problem
+
+# - script:
+#     cd RestaurantReviews
+#     dotnet build --configuration $(buildConfiguration)
+#   displayName: 'dotnet build $(buildConfiguration)'
+
+# - script: dotnet build RestaurantReviews --configuration $(buildConfiguration)
+#   displayName: 'dotnet build $(buildConfiguration)'
+
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'AzureBuild'
+    organization: 'jacobdavis1'
+    scannerMode: 'MSBuild'
+    projectKey: 'jacobdavis1-project1'
+    extraProperties: |
+     sonar.exclusions=**/lib/**
+
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
+  workingDirectory: ./
+
+# - script: dotnet test
+#   displayName: dotnet test
+#   workingDirectory: RestaurantReviews
+
+# a task can encapsulate some useful logic so we don't have to
+# write it all out in script step...
+# in this case, this task is both running tests and publishing the results
+# to the build itself
+
+- task: VisualStudioTestPlatformInstaller@1
+  inputs:
+    packageFeedSelector: 'nugetOrg'
+    versionSelector: 'latestPreRelease'
+
+- task: SonarCloudAnalyze@1
+
+- task: VSTest@2
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\bin\$(BuildConfiguration)\**\*test*.dll
+      !**\obj\**
+      !**\xunit.runner.visualstudio.testadapter.dll
+      !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+
+- task: DotNetCoreCLI@2
+  displayName: dotnet publish + zip
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    zipAfterPublish: true
+
+- task: SonarCloudPublish@1
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Free Trial(0afc561b-1f2a-482b-a185-9eea051a31d7)'
+    appType: 'webApp'
+    WebAppName: 'jacob1'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
