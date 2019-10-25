@@ -57,15 +57,11 @@ steps:
     testSelector: 'testAssemblies'
     testAssemblyVer2: |
       **\bin\$(BuildConfiguration)\**\*test*.dll
+      **\bin\$(BuildConfiguration)\**\*Test*.dll
       !**\obj\**
       !**\xunit.runner.visualstudio.testadapter.dll
       !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll
     searchFolder: '$(System.DefaultWorkingDirectory)'
-
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'XUnit'
-    testResultsFiles: '**/TEST-*.xml'
 
 - task: DotNetCoreCLI@2
   displayName: dotnet publish + zip
