@@ -138,7 +138,7 @@ namespace RatStore.Logic
             }
             else
             {
-                Log.Error($"Customer with Id {customer.CustomerId} could not be deleted because it does not exist.");
+                Log.Error($"Customer with Id {id} could not be deleted because it does not exist.");
             }
         }
         #endregion
@@ -196,7 +196,7 @@ namespace RatStore.Logic
             }
             else
             {
-                Log.Error($"Location with Id {location.LocationId} could not be removed because it does not exist.");
+                Log.Error($"Location with Id {id} could not be removed because it does not exist.");
             }
         }
         #endregion
@@ -306,7 +306,7 @@ namespace RatStore.Logic
             }
             else
             {
-                Log.Error($"Component with Id {component.ComponentId} could not be removed because it does not exist.");
+                Log.Error($"Component with Id {id} could not be removed because it does not exist.");
             }
         }
         #endregion
@@ -371,7 +371,7 @@ namespace RatStore.Logic
         {
             Data.Entities.Order currentOrder = _context.Order.Find(order.OrderId);
 
-            if (order != null)
+            if (currentOrder != null)
             {
                 Data.Entities.Order newOrder = Mapper.MapOrder(order);
 

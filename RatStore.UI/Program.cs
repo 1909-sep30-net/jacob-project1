@@ -81,7 +81,7 @@ namespace RatStore.UI
                             lastName = names[1];
                             break;
                         }
-                        else if (names[2].ToCharArray()[0] != ' ')
+                        else if (names[2][0] != ' ')
                         {
                             middleName = names[1];
                             lastName = names[2];
