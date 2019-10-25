@@ -62,6 +62,11 @@ steps:
       !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll
     searchFolder: '$(System.DefaultWorkingDirectory)'
 
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'XUnit'
+    testResultsFiles: '**/TEST-*.xml'
+
 - task: DotNetCoreCLI@2
   displayName: dotnet publish + zip
   inputs:
