@@ -29,6 +29,8 @@ steps:
     organization: 'jacobdavis1'
     scannerMode: 'MSBuild'
     projectKey: 'jacobdavis1-project1'
+    extraProperties: |
+     sonar.exclusions=**/lib/**
 
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
