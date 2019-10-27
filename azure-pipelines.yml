@@ -59,16 +59,12 @@ steps:
     publishWebProjects: true
     zipAfterPublish: true
 
-- task: VSTest@2
+# do this after other tasks such as building
+- task: DotNetCoreCLI@2
   inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: |
-      **\bin\$(buildConfiguration)\**\*test*.dll
-      **\bin\$(buildConfiguration)\**\*Test*.dll
-      !**\obj\**
-      !**\xunit.runner.visualstudio.testadapter.dll
-      !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll
-    searchFolder: '$(System.DefaultWorkingDirectory)'
+    command: test
+    projects: '**/*Test/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
 
 - task: SonarCloudPublish@1
 
