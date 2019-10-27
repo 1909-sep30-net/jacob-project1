@@ -52,23 +52,23 @@ steps:
 
 - task: SonarCloudAnalyze@1
 
-- task: VSTest@2
-  inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: |
-      **\bin\Debug\**\*test*.dll
-      **\bin\Debug\**\*Test*.dll
-      !**\obj\**
-      !**\xunit.runner.visualstudio.testadapter.dll
-      !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll
-    searchFolder: '$(System.DefaultWorkingDirectory)'
-
 - task: DotNetCoreCLI@2
   displayName: dotnet publish + zip
   inputs:
     command: 'publish'
     publishWebProjects: true
     zipAfterPublish: true
+
+- task: VSTest@2
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\bin\$(buildConfiguration)\**\*test*.dll
+      **\bin\$(buildConfiguration)\**\*Test*.dll
+      !**\obj\**
+      !**\xunit.runner.visualstudio.testadapter.dll
+      !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll
+    searchFolder: '$(System.DefaultWorkingDirectory)'
 
 - task: SonarCloudPublish@1
 
